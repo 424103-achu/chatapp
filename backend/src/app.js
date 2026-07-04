@@ -1,0 +1,12 @@
+import express from "express";
+import { configDotenv } from "dotenv";
+configDotenv();
+import healthrouter from "./routes/health.router.js";
+import authrouter from "./routes/auth.routes.js";
+import userroutes from "./routes/users.router.js";
+const app = express();
+app.use(express.json());
+app.use("/api/health", healthrouter);
+app.use("/api/users", userroutes);
+app.use("/api/auth",authrouter);
+export default app;
