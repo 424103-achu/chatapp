@@ -764,7 +764,8 @@ export const ConversationScalarFieldEnum = {
   groupName: 'groupName',
   groupImage: 'groupImage',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  privateKey: 'privateKey'
 } as const
 
 export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]

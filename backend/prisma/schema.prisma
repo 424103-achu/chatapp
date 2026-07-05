@@ -8,77 +8,78 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  username   String   @unique
-  email      String   @unique
-  password   String
+  id       String @id @default(cuid())
+  username String @unique
+  email    String @unique
+  password String
 
   profilePic String?
   bio        String?
 
-  isOnline   Boolean  @default(false)
-  lastSeen   DateTime?
+  isOnline Boolean   @default(false)
+  lastSeen DateTime?
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sentMessages Message[] @relation("Sender")
+  sentMessages Message[]                 @relation("Sender")
   participants ConversationParticipant[]
 
   @@map("users")
 }
 
 model Conversation {
-  id         String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  isGroup    Boolean  @default(false)
+  isGroup    Boolean @default(false)
   groupName  String?
   groupImage String?
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   messages     Message[]
   participants ConversationParticipant[]
-
+  privateKey String? @unique
   @@map("conversations")
 }
 
 model ConversationParticipant {
-  id             String   @id @default(cuid())
+  id String @id @default(cuid())
 
   userId         String
   conversationId String
 
-  joinedAt       DateTime @default(now())
+  joinedAt DateTime @default(now())
 
-  user          User         @relation(fields: [userId], references: [id])
-  conversation  Conversation @relation(fields: [conversationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
 
   @@unique([userId, conversationId])
-
+  @@index([userId])
+  @@index([conversationId])
   @@map("conversation_participants")
 }
 
 model Message {
-  id             String      @id @default(cuid())
+  id String @id @default(cuid())
 
   conversationId String
   senderId       String
 
-  content        String
-  type           MessageType @default(TEXT)
+  content String
+  type    MessageType @default(TEXT)
 
-  imageUrl       String?
+  imageUrl String?
 
-  isEdited       Boolean @default(false)
-  isDeleted      Boolean @default(false)
+  isEdited  Boolean @default(false)
+  isDeleted Boolean @default(false)
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
-  sender         User @relation("Sender", fields: [senderId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  sender       User         @relation("Sender", fields: [senderId], references: [id])
 
   @@map("messages")
 }
